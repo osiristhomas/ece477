@@ -1,0 +1,10 @@
+Size of char: 1 bytes
+Size of short: 2 bytes
+Size of int: 4 bytes
+Size of long: 4 bytes
+Size of float: 4 bytes
+Size of double: 8 bytes
+INT_MAX - decimal: 2147483647 hex: 7FFFFFFF 
+UINT_MAX - decimal: 4294967295 hex: FFFFFFFF 
+LONG_MAX - decimal: 2147483647 hex: 7FFFFFFF 
+ULONG_MAX - decimal: 4294967295 hex: FFFFFFFF 
