@@ -8,3 +8,7 @@ INT_MAX - decimal: 2147483647 hex: 7FFFFFFF
 UINT_MAX - decimal: 4294967295 hex: FFFFFFFF 
 LONG_MAX - decimal: 2147483647 hex: 7FFFFFFF 
 ULONG_MAX - decimal: 4294967295 hex: FFFFFFFF 
+Max uint8_t number: 255
+Max uint16_t number: 65535
+Max uint32_t number: 4294967295
+Max uint64_t number: 18446744073709551615
