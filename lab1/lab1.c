@@ -1,10 +1,14 @@
 /* Osiris Thomas
  * ECE 477 Lab 1
  * Prints the size of variable types in bytes
+ * 
+ * Cool thing: determines the largest values that can be stored in different
+ * sized ints
  */
 
 #include <stdio.h>
 #include <limits.h>
+#include <inttypes.h>
 
 int main(void)
 {
@@ -22,6 +26,17 @@ int main(void)
 	printf("LONG_MAX - decimal: %d hex: %X \n", LONG_MAX, LONG_MAX);
 	printf("ULONG_MAX - decimal: %u hex: %X \n", ULONG_MAX, ULONG_MAX);
 
-	return 0;
+	// prints largest values of different int types
+	uint8_t e = -1;
+	uint16_t st = -1;
+	uint32_t tt = -1;
+	uint64_t sf = -1;
 
+	printf("Max uint8_t number: %u\n", e); 
+	printf("Max uint16_t number: %u\n", st); 
+	printf("Max uint32_t number: %u\n", tt);
+	// need a different way of printing a bit byte number 
+	printf("Max uint64_t number: %"PRIu64"\n", sf); 
+
+	return 0;
 }
