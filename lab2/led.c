@@ -58,7 +58,7 @@ void direction(const char *pin, char *dir)
         int file = open(path, O_WRONLY);
         // write the value passed into the file
         write(file, dir, sizeof(char) * 5);
-	printf("Wrote \"out\" to %s\n", path);
+//	printf("Wrote \"out\" to %s\n", path);
         close(file);
         free(path);
 }
