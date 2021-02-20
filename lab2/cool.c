@@ -19,7 +19,6 @@ void init_gpio(const char **);
 // unexports all used GPIO pins
 void stop_gpio(const char **);
 // set leds based on user input
-void set_leds(const char **, int);
 void dot(int);
 void dash(int);
 void morse(char *);
@@ -70,23 +69,6 @@ void stop_gpio(const char **gpio)
 
 }
 
-// set leds based on user input
-void set_leds(const char **gpio, int input)
-{
-	int i;
-	unsigned int mask = 1;
-	char bitvalue[2];
-	for (i = 0; i < 8; i++) {
-		// mask the input, store into makeresult string
-		snprintf(bitvalue, 2, "%d", mask & input);
-		// send value of bit to GPIO
-		value(gpio[i], bitvalue);
-		// right shift mask to get next bit
-		mask = mask << 1;
-	//	usleep(10000);
-	}
-}
-
 void dot(int num)
 {
 	int i;
@@ -116,44 +98,52 @@ void morse(char *str)
 		case ' ': 
 			usleep(SPACE);
 			break;
-		case 'a': 
+		case 'a':
+		case 'A': 
 			dot(1);
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'b':
+		case 'B':
 			dash(1);
 			dot(3);
 			usleep(DAH);
 			break;
-		case 'c': 
+		case 'c':
+		case 'C': 
 			dash(1);
 			dot(1);
 			dash(1);
 			dot(1);
 			usleep(DAH);
 			break;
-		case 'd': 
+		case 'd':
+		case 'D': 
 			dash(1);
 			dot(2);
 			usleep(DAH);
 			break;
 		case 'e':
+		case 'E':
 			dot(1);
 			usleep(DAH);
 			break;
 		case 'f':
+		case 'F':
 			dot(2);
 			dash(1);
 			dot(1);
 			usleep(DAH);
 			break;
 		case 'g':
+		case 'G':
 			dash(2);
 			dot(1);
 			usleep(DAH);
 			break;
 		case 'h':
+		case 'H':
 			dot(4);
 			usleep(DAH);
 			break;
@@ -162,89 +152,106 @@ void morse(char *str)
 			usleep(DAH);
 			break;
 		case 'j':
+		case 'J':
 			dot(1);
 			dash(3);
 			usleep(DAH);
 			break;
 		case 'k':
+		case 'K':
 			dash(1);
 			dot(1);
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'l':
+		case 'L':
 			dot(1);
 			dash(1);
 			dot(2);
 			usleep(DAH);
 			break;
 		case 'm':
+		case 'M':
 			dash(2);
 			usleep(DAH);
 			break;
 		case 'n':
+		case 'N':
 			dash(1);
 			dot(1);
 			usleep(DAH);
 			break;
 		case 'o':
+		case 'O':
 			dash(3);
 			usleep(DAH);
 			break;
 		case 'p':
+		case 'P':
 			dot(1);
 			dash(2);
 			dot(1);
 			usleep(DAH);
 			break;
 		case 'q':
+		case 'Q':
 			dash(2);
 			dot(1);
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'r':
+		case 'R':
 			dot(1);
 			dash(1);
 			dot(1);
 			usleep(DAH);
 			break;
 		case 's':
+		case 'S':
 			dot(3);
 			usleep(DAH);
 			break;
 		case 't':
+		case 'T':
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'u':
+		case 'U':
 			dot(2);
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'v':
+		case 'V':
 			dot(3);
 			dash(1);
 			usleep(DAH);
 			break;
 		case 'w':
+		case 'W':
 			dot(1);
 			dash(2);
 			usleep(DAH);
 			break;
 		case 'x':
+		case 'X':
 			dash(1);
 			dot(2);
 			dash(1);
 			usleep(DAH);
 			break;
-		case 'y': 
+		case 'y':
+		case 'Y': 
 			dash(1);
 			dot(1);
 			dash(2);
 			usleep(DAH);
 			break;
 		case 'z':
+		case 'Z':
 			dash(2);
 			dot(2);
 			usleep(DAH);
