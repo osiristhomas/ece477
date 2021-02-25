@@ -15,35 +15,36 @@
 void init_gpio(const char **);
 // unexports all used GPIO pins
 void stop_gpio(const char **);
-// set leds based on user input
+// set leds based on cpu load
 void set_leds(const char **, int);
+// reads the first value of a line in a file
+float get_cpu(int);
+// display leds based on how busy cpu is
+void conv_value(const char **, float);
 
 int main(int argc, char *argv[])
 {
-	// number in argv[1]
-	long input;
-	// "trashcan" for the string part of 
-	char *buf;
-	// checks for correct input
-	if (argc != 2) {
-		printf("Must enter one argument\n");
-		exit(1);
-	} 
-	
-	// converts input string (hex, dec, oct) to int
-	input = strtol(argv[1], &buf, 0);
-	printf("Entered input: %ld\n", input);
-	if (input < 0 || input > 0xFF) {
-		printf("Input must be between 0 and 255/0xFF/0377\n");
-		exit(2);
-	}
-	
+	//char input = '0';
+	float cpu_load = 0.0;
 	const char *gpio[8] = {"18", "23", "24", "25", "12", "16", "20", "21"};
+	int file;
+		
+	// open file with read only access
 	init_gpio(gpio);
-	//printf("Succesfully initialized GPIO\n");	
-	
-	set_leds(gpio, input);	
-	
+	printf("Reading /proc/loadavg. Press 'q' to quit.\n");
+	// enter loop until q is pressed
+	while (1) {
+		file = open("/proc/loadavg", O_RDONLY);
+		if (file == -1) {
+			printf("Cannot open /proc/loadavg\n");
+			exit(1);
+		}
+		cpu_load = get_cpu(file);
+	//	printf("%f\n", cpu_load);
+		conv_value(gpio, cpu_load);
+		close(file);
+		sleep(2);
+	}	
 	stop_gpio(gpio);
 	return 0; 
 }
@@ -77,7 +78,7 @@ void stop_gpio(const char **gpio)
 
 }
 
-// set leds based on user input
+// set leds based on cpu usage
 void set_leds(const char **gpio, int input)
 {
 	int i;
@@ -92,4 +93,44 @@ void set_leds(const char **gpio, int input)
 		mask = mask << 1;
 	//	usleep(10000);
 	}
+}
+
+float get_cpu(int f)
+{
+	char *buf = calloc(10, sizeof(char));
+	int pos = 0;
+	char *str;
+	char ch = '0';
+	float load;
+	do {
+		ch = '0';
+		read(f, &ch, 1);
+		buf[pos++] = ch;
+	} while (ch != ' ');
+	*(buf + pos) = '\0';
+//	printf("%s\n", buf);
+	load = strtod(buf, &str);
+	free(buf);
+	return load;
+}
+
+void conv_value(const char **gpio, float load)
+{
+	if (load > 4)
+		set_leds(gpio, 255);
+	else if (load <= 4 && load > 2)
+		set_leds(gpio, 127);
+	else if (load <= 2 && load > 1)
+		set_leds(gpio, 63);
+	else if (load <= 1 && load > 0.5)
+		set_leds(gpio, 31);
+	else if (load <= 0.5 && load > 0.25)
+		set_leds(gpio, 15);
+	else if (load <= 0.25 && load > 0.125)
+		set_leds(gpio, 7);
+	else if (load <= 0.125 && load > .0625)
+		set_leds(gpio, 3);
+	else if (load <= 0.625 && load > 0.03125)
+		set_leds(gpio, 1);
+	else set_leds(gpio, 0);
 }
