@@ -27,11 +27,10 @@ int main(int argc, char *argv[])
 {
 	float cpu_temp = 0.0;
 	const char *gpio[8] = {"18", "23", "24", "25", "12", "16", "20", "21"};
-	int file;
-	char key;	
+	int file;	
 	init_gpio(gpio);
 	// enter loop until q is pressed
-	while ((key = getchar()) != 'q') {
+	while (1) {
 		// access file where temperature is stored, read only
 		file = open("/sys/class/thermal/thermal_zone0/temp", O_RDONLY);
 		if (file == -1) {
