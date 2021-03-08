@@ -8,8 +8,6 @@
 #include <unistd.h>
 #include <wiringPi.h>
 
-#define A digitalRead(0)
-#define B digitalRead(1)
 #define FW 0
 #define BW 1
 
@@ -23,13 +21,18 @@ int main(int argc, char *argv[])
 	// Initial time delay is half a second
 	int del = 512 * 1000;
 	int level = 1;
+	int A;
+	int prevA = 0;
 	wiringPiSetup();
 	init_gpio();
 
 	while (1) {
 		// "Serve" the ball
 		cycle_leds(del, BW);
-		if (A) {
+		// Read the current value on GPIO pin 0
+		A = digitalRead(0);
+		// Check to make sure A is a new press
+		if (A && !prevA) {
 			// Return the ball if A is pressed
 			cycle_leds(del, FW);
 		} else {
@@ -76,3 +79,4 @@ void cycle_leds(int delay, int dir)
 		}
 	}
 }
+

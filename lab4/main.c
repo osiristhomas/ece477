@@ -7,8 +7,6 @@
 #include <unistd.h>
 #include <wiringPi.h>
 
-#define A digitalRead(0)
-#define B digitalRead(1)
 #define FW 0
 #define BW 1
 
@@ -21,20 +19,34 @@ int main(int argc, char *argv[])
 {
 	int del = 1024 * 1000;
 	int dir = FW;
+	int A;
+	int B;
+	int prevA = 0;
+	int prevB = 0;
+	
 	wiringPiSetup();
 	init_gpio();
-	// go through loop while both buttons aren't pressed
+	
+	/* Go through loop while both buttons aren't pressed
+	 * The previous button press must be 0 for a new button press
+	 * to be registered
+	 */
 	while (1) {
+		A = digitalRead(0);
+		B = digitalRead(1);
+		
 		if (A && B)
 			return 0;
-		else if (A && (del > 32 * 1000))
+		else if (A && !prevA && (del > 32 * 1000))
 			del /= 2;
-		else if (A && (del == 32 * 1000))
+		else if (A && !prevA && (del == 32 * 1000))
 			dir = BW;
-		else if (B && (del < 1024 * 1000))
+		else if (B && !prevB && (del < 1024 * 1000))
 			del *= 2;
-		else if (B && (del == 1024 * 1000))
+		else if (B && !prevB && (del == 1024 * 1000))
 			dir = FW;
+		prevA = A;
+		prevB = B;
 		cycle_leds(del, dir);
 	}
 }
